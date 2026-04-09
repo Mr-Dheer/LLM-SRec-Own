@@ -145,6 +145,16 @@ def train_model_(rank, world_size, args):
     scheduler = LambdaLR(adam_optimizer, lr_lambda=lambda epoch: 0.95 ** epoch)
     epoch_start_idx = 1
 
+    # Resume from a previous checkpoint if --resume_epoch is specified
+    if getattr(args, 'resume_epoch', None) is not None:
+        print(f'Resuming training from epoch {args.resume_epoch} checkpoint...')
+        model.load_model(args, phase2_epoch=args.resume_epoch)
+        epoch_start_idx = args.resume_epoch + 1
+        # Fast-forward the LR scheduler to match the resumed epoch
+        for _ in range(args.resume_epoch):
+            scheduler.step()
+        print(f'Starting from epoch {epoch_start_idx}')
+
     T = 0.0
     best_perform = 0    # Best validation HR@10 seen so far
     early_stop = 0      # Counter for early stopping
