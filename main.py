@@ -40,13 +40,14 @@ if __name__ == "__main__":
     parser.add_argument("--save_dir", type=str, default='seqllm')  # Directory to save model checkpoints
 
     # --- Training hyperparameters ---
-    parser.add_argument('--batch_size', default=20, type=int)           # Training batch size
+    parser.add_argument('--batch_size', default=32, type=int)           # Training batch size
     parser.add_argument('--batch_size_infer', default=20, type=int)     # Inference/evaluation batch size
     parser.add_argument('--infer_epoch', default=1, type=int)           # Epoch checkpoint to use for inference
     parser.add_argument('--maxlen', default=128, type=int)              # Maximum interaction sequence length (paper default)
     parser.add_argument('--num_epochs', default=10, type=int)           # Maximum training epochs (early stopping with patience=5)
     parser.add_argument("--stage2_lr", type=float, default=0.0001)      # Learning rate for Adam optimizer (paper: 0.0001)
     parser.add_argument('--nn_parameter', default=False, action='store_true')  # Use nn.Parameter instead of nn.Embedding (needed for Gaudi HPU)
+    parser.add_argument('--resume_epoch', default=None, type=int)              # Resume training from this epoch's checkpoint (loads from model_train/)
 
 
     args = parser.parse_args()
